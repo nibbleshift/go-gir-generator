@@ -643,6 +643,10 @@ func (ci *ConstantInfo) Value() interface{} {
 		return *(*float64)(unsafe.Pointer(&arg))
 	case TYPE_TAG_UTF8, TYPE_TAG_FILENAME:
 		return C.GoString(*(**C.char)(unsafe.Pointer(&arg)))
+	case TYPE_TAG_INTERFACE:
+		return *(*int64)(unsafe.Pointer(&arg))
+	default:
+		fmt.Printf("Unsupported CONSTANT %d\n", ti.Tag())
 	}
 	panic("unsupported constant value")
 	return nil

@@ -1,0 +1,12 @@
+package gst
+
+/*
+#include "gst.gen.h"
+#cgo pkg-config: gstreamer-1.0
+*/
+import "C"
+import "unsafe"
+
+[<.go_utils_no_cb>]
+[<.go_bindings>]
+

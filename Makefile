@@ -3,6 +3,7 @@ GOBUILD = go build
 GOTEST = go build
 GORUN = go run
 OUT_GIR_DIR = out/src/pkg.deepin.io/gir/
+GO111MODULE = off
 
 all: build
 
@@ -11,7 +12,7 @@ export GOPATH = $(CURDIR):$(CURDIR)/vendor:$(CURDIR)/out
 
 GENERATOR = out/gir-generator
 
-build: glib-2.0 gobject-2.0 gio-2.0 gudev-1.0 copyfile 
+build: glib-2.0 gobject-2.0 gio-2.0 gudev-1.0 gstreamer-1.0 copyfile 
 
 generator:
 	mkdir -p $(OUT_GIR_DIR)
@@ -22,6 +23,7 @@ copyfile:
 	cp -r  lib.in/gio-2.0       $(OUT_GIR_DIR)
 	cp -r  lib.in/glib-2.0      $(OUT_GIR_DIR)
 	cp -r  lib.in/gudev-1.0     $(OUT_GIR_DIR)
+	cp -r  lib.in/gstreamer-1.0     $(OUT_GIR_DIR)
 
 glib-2.0: lib.in/glib-2.0/glib.go.in lib.in/glib-2.0/config.json generator
 	${GENERATOR} -o  $(OUT_GIR_DIR)$@ $<
@@ -35,11 +37,15 @@ gio-2.0:  lib.in/gio-2.0/gio.go.in lib.in/gio-2.0/config.json generator
 gudev-1.0: lib.in/gudev-1.0/gudev.go.in lib.in/gudev-1.0/config.json generator
 	${GENERATOR} -o $(OUT_GIR_DIR)$@ $<
 
+gstreamer-1.0:  lib.in/gstreamer-1.0/gstreamer.go.in lib.in/gstreamer-1.0/config.json generator
+	${GENERATOR} -o $(OUT_GIR_DIR)$@ $<
+
 test:
 	cd $(OUT_GIR_DIR)gobject-2.0 && ${GOTEST}
 	cd $(OUT_GIR_DIR)gio-2.0 && ${GOTEST}
 	cd $(OUT_GIR_DIR)glib-2.0 && ${GOTEST}
 	cd $(OUT_GIR_DIR)gudev-1.0 && ${GOTEST}
+	cd $(OUT_GIR_DIR)gstreamer-1.0 && ${GOTEST}
 	@echo "Memory Testing"
 	${GORUN} test/memory.go
 
